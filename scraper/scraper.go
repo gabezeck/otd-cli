@@ -34,7 +34,7 @@ func Scrape() (*OTDData, error) {
 	}
 
 	// Wikipedia requires a User-Agent header
-	req.Header.Set("User-Agent", "otd-cli/1.0 (https://github.com/gabrielzeck/otd-cli; generic@example.com)")
+	req.Header.Set("User-Agent", "otd-cli/1.0 (https://github.com/gabezeck/otd-cli; me@gabezeck.com)")
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -66,15 +66,15 @@ func Scrape() (*OTDData, error) {
 		}
 		return true // continue
 	})
-	
+
 	if data.Date == "" {
 		data.Date = "Today"
 	}
 
 	// 2. Get Events
-	// The events are in a <ul>. On the 'Today' page, it is typically the first <ul> 
+	// The events are in a <ul>. On the 'Today' page, it is typically the first <ul>
 	// that is a direct child of .mw-parser-output, or at least the first significant one.
-	// We can iterate over all ULs and check the content format to be sure, 
+	// We can iterate over all ULs and check the content format to be sure,
 	// or just trust it's the first one as per standard layout.
 	// We'll try the first one.
 	eventsList := mainContent.Find("ul").First()

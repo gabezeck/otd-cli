@@ -4,70 +4,57 @@ import "github.com/charmbracelet/lipgloss"
 
 var (
 	// Colors
-	subtle    = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
-	highlight = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
-	special   = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
-	warning   = lipgloss.AdaptiveColor{Light: "#F25D94", Dark: "#F55385"}
-	text      = lipgloss.AdaptiveColor{Light: "#1A1A1A", Dark: "#DDDDDD"}
+	subtle  = lipgloss.AdaptiveColor{Light: "#C9C1B5", Dark: "#4B4741"}
+	accent  = lipgloss.AdaptiveColor{Light: "#B96A3A", Dark: "#D18A5E"}
+	muted   = lipgloss.AdaptiveColor{Light: "#6B6258", Dark: "#B7AFA4"}
+	text    = lipgloss.AdaptiveColor{Light: "#2A2520", Dark: "#E6DED2"}
+	soft    = lipgloss.AdaptiveColor{Light: "#8E8073", Dark: "#8A8378"}
+	accent2 = lipgloss.AdaptiveColor{Light: "#7C8A6B", Dark: "#9AA787"}
 
 	// Header
-	headerStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#FAFAFA")).
-		Background(highlight).
-		Padding(1, 2).
-		MarginBottom(1)
-
 	headerTitleStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#ffffff")).
-		Background(lipgloss.Color("#7D56F4")).
-		Padding(0, 1)
+				Bold(true).
+				Foreground(accent)
 
 	headerDateStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#ffffff")).
-		Background(lipgloss.Color("#F55385")).
-		Padding(0, 1)
+			Bold(true).
+			Foreground(soft)
+
+	headerSummaryStyle = lipgloss.NewStyle().
+				Foreground(muted)
+
+	dividerStyle = lipgloss.NewStyle().
+			Foreground(subtle)
 
 	// Sections
 	sectionHeaderStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(special).
-		MarginTop(1).
-		MarginBottom(1).
-		BorderStyle(lipgloss.NormalBorder()).
-		BorderBottom(true).
-		BorderForeground(subtle)
+				Bold(true).
+				Foreground(accent2).
+				MarginTop(1).
+				MarginBottom(0)
 
 	// Timeline / Events
 	yearStyle = lipgloss.NewStyle().
-		Foreground(warning).
-		Bold(true).
-		Width(6).
-		Align(lipgloss.Right).
-		MarginRight(1)
+			Foreground(accent).
+			Bold(true).
+			Width(6).
+			Align(lipgloss.Right).
+			MarginRight(1)
 
 	timelineDotStyle = lipgloss.NewStyle().
-		Foreground(subtle).
-		SetString("│") // Vertical line for timeline
+				Foreground(subtle).
+				SetString("│") // Vertical line for timeline
 
 	descStyle = lipgloss.NewStyle().
-		Foreground(text).
-		MarginLeft(1)
+			Foreground(text).
+			MarginLeft(1)
 
 	// Birthdays
-	birthdayContainerStyle = lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(subtle).
-		Padding(0, 1).
-		MarginTop(1)
-
 	nameStyle = lipgloss.NewStyle().
-		Foreground(special).
-		Bold(true)
+			Foreground(accent2).
+			Bold(true)
 
 	bYearStyle = lipgloss.NewStyle().
-		Foreground(subtle).
-		MarginLeft(1)
+			Foreground(muted).
+			MarginLeft(1)
 )
