@@ -2,6 +2,8 @@
 
 On This Day is a compact TUI and headless CLI that prints notable historical events and famous birthdays for the current date. It is designed to feel calm and readable at terminal startup (e.g., in shell configs, similar to fastfetch).
 
+![On This Day CLI screenshot](screenshot.png "On This Day CLI screenshot")
+
 ## Features
 
 - Curated, compact output (defaults to 6 events and 6 birthdays)
