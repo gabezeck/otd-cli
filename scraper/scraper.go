@@ -1,10 +1,13 @@
 package scraper
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/joho/godotenv"
@@ -26,7 +29,79 @@ type OTDData struct {
 	Birthdays []Birthday
 }
 
+type cacheFile struct {
+	Date string  // "YYYY-MM-DD" of when this was fetched
+	Data OTDData
+}
+
+func cacheDir() (string, error) {
+	base, err := os.UserCacheDir()
+	if err != nil {
+		return "", err
+	}
+	dir := filepath.Join(base, "otd-cli")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return "", err
+	}
+	return dir, nil
+}
+
+func loadCache() (*OTDData, bool) {
+	dir, err := cacheDir()
+	if err != nil {
+		return nil, false
+	}
+	path := filepath.Join(dir, "today.json")
+
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil, false
+	}
+
+	var cf cacheFile
+	if err := json.Unmarshal(b, &cf); err != nil {
+		return nil, false
+	}
+
+	today := time.Now().Format("2006-01-02")
+	if cf.Date != today {
+		return nil, false
+	}
+
+	return &cf.Data, true
+}
+
+func writeCache(data *OTDData) {
+	dir, err := cacheDir()
+	if err != nil {
+		return
+	}
+	cf := cacheFile{
+		Date: time.Now().Format("2006-01-02"),
+		Data: *data,
+	}
+	b, err := json.Marshal(cf)
+	if err != nil {
+		return
+	}
+	_ = os.WriteFile(filepath.Join(dir, "today.json"), b, 0644)
+}
+
 func Scrape() (*OTDData, error) {
+	if data, ok := loadCache(); ok {
+		return data, nil
+	}
+
+	data, err := fetch()
+	if err != nil {
+		return nil, err
+	}
+
+	writeCache(data)
+	return data, nil
+}
+
+func fetch() (*OTDData, error) {
 	// Load .env if present; ignore error (file may not exist)
 	_ = godotenv.Load()
 
@@ -108,13 +183,13 @@ func Scrape() (*OTDData, error) {
 				Text: strings.TrimSpace(parts[1]),
 			})
 		} else {
-            // Keep it even if parse fails, just put whole text in Text
-            if strings.TrimSpace(text) != "" {
-                data.Events = append(data.Events, Event{
-                    Year: "",
-                    Text: strings.TrimSpace(text),
-                })
-            }
+			// Keep it even if parse fails, just put whole text in Text
+			if strings.TrimSpace(text) != "" {
+				data.Events = append(data.Events, Event{
+					Year: "",
+					Text: strings.TrimSpace(text),
+				})
+			}
 		}
 	})
 
