@@ -3,9 +3,11 @@ package scraper
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/joho/godotenv"
 )
 
 type Event struct {
@@ -25,6 +27,18 @@ type OTDData struct {
 }
 
 func Scrape() (*OTDData, error) {
+	// Load .env if present; ignore error (file may not exist)
+	_ = godotenv.Load()
+
+	originURL := os.Getenv("OTD_ORIGIN_URL")
+	if originURL == "" {
+		originURL = "https://github.com/gabezeck/otd-cli"
+	}
+	contactEmail := os.Getenv("OTD_CONTACT_EMAIL")
+	if contactEmail == "" {
+		contactEmail = "contact@example.com"
+	}
+
 	url := "https://en.wikipedia.org/wiki/Wikipedia:On_this_day/Today"
 
 	client := &http.Client{}
@@ -34,7 +48,7 @@ func Scrape() (*OTDData, error) {
 	}
 
 	// Wikipedia requires a User-Agent header
-	req.Header.Set("User-Agent", "otd-cli/1.0 (https://github.com/gabezeck/otd-cli; me@gabezeck.com)")
+	req.Header.Set("User-Agent", fmt.Sprintf("otd-cli/1.0 (%s; %s)", originURL, contactEmail))
 
 	res, err := client.Do(req)
 	if err != nil {
